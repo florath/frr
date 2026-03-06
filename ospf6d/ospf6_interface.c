@@ -750,6 +750,14 @@ uint8_t dr_election(struct ospf6_interface *oi)
 			event_add_event(master, adj_ok, on, 0,
 					&on->thread_adj_ok);
 		}
+
+		/*
+		 * DR/BDR identity changes can alter the transit-network
+		 * link described in Router-LSA even when interface state
+		 * remains unchanged (e.g. BDR -> BDR). Re-originate to
+		 * avoid stale zero-link LSAs under churn.
+		 */
+		OSPF6_ROUTER_LSA_SCHEDULE(oi->area);
 	}
 
 	oi->drouter = (drouter ? drouter->router_id : htonl(0));
