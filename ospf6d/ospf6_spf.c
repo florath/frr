@@ -1173,6 +1173,7 @@ int ospf6_ase_calculate_route(struct ospf6 *ospf6, struct ospf6_lsa *lsa,
 						__func__, &prefix);
 				(*hook_add)(route);
 			}
+			route->flag = 0;
 		}
 	} else if (ntohs(lsa->header->type) == OSPF6_LSTYPE_TYPE_7) {
 		hook_add = area->route_table->hook_add;
@@ -1215,6 +1216,7 @@ int ospf6_ase_calculate_route(struct ospf6 *ospf6, struct ospf6_lsa *lsa,
 				(*hook_add)(route);
 			}
 			ospf6_abr_check_translate_nssa(area, lsa);
+			route->flag = 0;
 		}
 	}
 	return 0;
