@@ -79,6 +79,7 @@ struct ospf6_vertex {
 #define OSPF6_SPF_FLAGS_CONFIG_CHANGE            (1 << 8)
 #define OSPF6_SPF_FLAGS_ASBR_STATUS_CHANGE       (1 << 9)
 #define OSPF6_SPF_FLAGS_GR_FINISH                (1 << 10)
+#define OSPF6_SPF_FLAGS_NEIGHBOR_STATE_CHANGE    (1 << 11)
 
 static inline void ospf6_set_spf_reason(struct ospf6 *ospf, unsigned int reason)
 {
