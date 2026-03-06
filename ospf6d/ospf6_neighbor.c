@@ -273,6 +273,13 @@ static void ospf6_neighbor_state_change(uint8_t next_state,
 
 		if (prev_state == OSPF6_NEIGHBOR_FULL)
 			on->ospf6_if->area->full_nbrs--;
+
+		/* Neighbor Full transitions can leave stale SPF state under churn.
+		 * Trigger SPF explicitly in addition to LSA-driven scheduling.
+		 */
+		if (!OSPF6_GR_IS_ACTIVE_HELPER(on))
+			ospf6_spf_schedule(on->ospf6_if->area->ospf6,
+					   OSPF6_SPF_FLAGS_NEIGHBOR_STATE_CHANGE);
 	}
 
 	if ((prev_state == OSPF6_NEIGHBOR_EXCHANGE ||

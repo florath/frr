@@ -435,6 +435,7 @@ static const char *const ospf6_spf_reason_str[] = {
 	"C",  /* OSPF6_SPF_FLAGS_CONFIG_CHANGE */
 	"A",  /* OSPF6_SPF_FLAGS_ASBR_STATUS_CHANGE */
 	"GR", /* OSPF6_SPF_FLAGS_GR_FINISH */
+	"NB", /* OSPF6_SPF_FLAGS_NEIGHBOR_STATE_CHANGE */
 };
 
 void ospf6_spf_reason_string(uint32_t reason, char *buf, int size)
