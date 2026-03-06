@@ -121,6 +121,17 @@ static void ospf6_neighbor_clear_ls_lists(struct ospf6_neighbor *on)
 	}
 }
 
+static void ospf6_neighbor_reset_exchange(struct ospf6_neighbor *on)
+{
+	ospf6_neighbor_clear_ls_lists(on);
+	event_cancel(&on->thread_send_lsreq);
+	event_cancel(&on->thread_send_lsupdate);
+	event_cancel(&on->thread_send_lsack);
+	event_cancel(&on->event_loading_done);
+	event_cancel(&on->last_dbdesc_release_timer);
+	memset(&on->dbdesc_last, 0, sizeof(struct ospf6_dbdesc));
+}
+
 /* create ospf6_neighbor */
 struct ospf6_neighbor *ospf6_neighbor_create(uint32_t router_id,
 					     struct ospf6_interface *oi)
@@ -532,7 +543,7 @@ void seqnumber_mismatch(struct event *event)
 	SET_FLAG(on->dbdesc_bits, OSPF6_DBDESC_MBIT);
 	SET_FLAG(on->dbdesc_bits, OSPF6_DBDESC_IBIT);
 
-	ospf6_neighbor_clear_ls_lists(on);
+	ospf6_neighbor_reset_exchange(on);
 
 	event_cancel(&on->thread_send_dbdesc);
 	on->dbdesc_seqnum++; /* Incr seqnum as per RFC2328, sec 10.3 */
@@ -560,7 +571,7 @@ void bad_lsreq(struct event *event)
 	SET_FLAG(on->dbdesc_bits, OSPF6_DBDESC_MBIT);
 	SET_FLAG(on->dbdesc_bits, OSPF6_DBDESC_IBIT);
 
-	ospf6_neighbor_clear_ls_lists(on);
+	ospf6_neighbor_reset_exchange(on);
 
 	event_cancel(&on->thread_send_dbdesc);
 	on->dbdesc_seqnum++; /* Incr seqnum as per RFC2328, sec 10.3 */
