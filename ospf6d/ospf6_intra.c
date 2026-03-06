@@ -1082,6 +1082,8 @@ void ospf6_intra_prefix_lsa_originate_stub(struct event *event)
 		if (IS_OSPF6_DEBUG_ORIGINATE(INTRA_PREFIX))
 			zlog_debug(
 				"Quit to Advertise Intra-Prefix: no route to advertise");
+		if (old)
+			ospf6_lsa_purge(old);
 		return;
 	}
 
